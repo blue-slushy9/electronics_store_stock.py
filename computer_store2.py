@@ -1,33 +1,58 @@
 # Made this copy of the original program file for experimentation!
 
+# Create a dictionary of products for sale at an electronics store, how 
+# many of that item the store has in stock, and the price for each item; 
+# please note that the prices are in dollars but I had to omit the $ signs;
+
+electronics = {
+        
+        "laptop": {"Quantity": 100, "Price": 300},
+        
+        "desktop": {"Quantity": 50, "Price": 500},
+        
+        "router": {"Quantity": 30, "Price": 200},
+        
+        "switch": {"Quantity": 20, "Price": 100},
+        
+        "monitor": {"Quantity": 20, "Price": 75},
+        
+        "mouse": {"Quantity": 20, "Price": 10},
+        
+        "hard drive": {"Quantity": 25, "Price": 100}
+
+}
+
+# Prompts the user for their desired product and returns the input
+def enter_product():
+    #print("Please enter the name of the product you would like to buy now: ")
+    product = input("Please enter the name of the product you would like "
+                    "to buy now: ")
+    #print()
+    return product
+
+# Creates a list of all of the electronics carried by the store, and then 
+# joins them into string format, with each product separated by a comma
+def print_electronics():
+
+    # Create a list for all of our electronics
+    electronics_list = []
+    
+    # electronics is the dictionary, this iterates over its keys
+    for item in electronics:
+        electronics_list.append(item)
+    
+    joined_electronics = (', '.join(electronics_list))
+    # Now we inform the customer of what they can buy at this "store"
+    print(f'{joined_electronics}\n')
+
+# The below may not need to be a function, however I will keep it for now 
+# because I can't remember what I had in mind last year lol...
+
 # You can encapsulate your entire program, or portions of it, inside of a
 # function definition in order to restart the program as needed
-
 def beginning():
     # sys.exit() terminates the program, exit status code is optional
     from sys import exit
-
-    # Create a dictionary of products for sale at an electronics store, how 
-    # many of that item the store has in stock, and the price for each item; 
-    # please note that the prices are in dollars but I had to omit the $ signs;
-
-    electronics = {
-            
-            "laptop": {"Quantity": 100, "Price": 300},
-            
-            "desktop": {"Quantity": 50, "Price": 500},
-            
-            "router": {"Quantity": 30, "Price": 200},
-            
-            "switch": {"Quantity": 20, "Price": 100},
-            
-            "monitor": {"Quantity": 20, "Price": 75},
-            
-            "mouse": {"Quantity": 20, "Price": 10},
-            
-            "hard drive": {"Quantity": 25, "Price": 100}
-
-    }
 
     # Ask the customer what product they want, how many, give them the total 
     # for their order, and then update the inventory
@@ -36,40 +61,19 @@ def beginning():
     # legibility in the terminal, e.g. below
     print()
 
-    # Prompts the user for their desired product and returns the input
-    def enter_product():
-        #print("Please enter the name of the product you would like to buy now: ")
-        product = input("Please enter the name of the product you would like "
-                        "to buy now: ")
-        #print()
-        return product
     # Call function, capture output
     product = enter_product()
 
     if product not in electronics:
         print(f"\nSorry, we don't carry {product}s at this time. These are the "
                 "products we do carry: \n")
-
-
-    # Creates a list of all of the electronics carried by the store, and then 
-    # joins them into string format, with each product separated by a comma
-    def print_electronics():
-
-        # Create a list for all of our electronics
-        electronics_list = []
+        # Print all of the electronics we have in stock     
+        print_electronics()
+    
+    elif product in electronics:
         
-        # electronics is the dictionary, this iterates over its keys
-        for item in electronics:
-            electronics_list.append(item)
-        
-        joined_electronics = (', '.join(electronics_list))
-        # Now we inform the customer of what they can buy at this "store"
-        print(f'{joined_electronics}\n')
 
-    # Call the function        
-    print_electronics()
-
-    # Define function that prompts customer after listing products in stock 
+    # Prompt customer again after listing products that are in stock
     def purchase_above_prod():
 
         above_prods = input("Would you like to purchase one of the above\n"
