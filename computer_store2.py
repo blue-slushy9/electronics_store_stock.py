@@ -1,3 +1,5 @@
+# Made this copy of the original program file for experimentation!
+
 # You can encapsulate your entire program, or portions of it, inside of a
 # function definition in order to restart the program as needed
 
