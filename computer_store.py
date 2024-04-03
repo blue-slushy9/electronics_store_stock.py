@@ -11,19 +11,19 @@ def beginning():
 
     electronics = {
             
-            "laptop": {"Quantity": 100, "Price": 500},
+            "laptop": {"Quantity": 100, "Price": 300},
             
             "desktop": {"Quantity": 50, "Price": 500},
             
-            "router": {"Quantity": 30, "Price": 100},
+            "router": {"Quantity": 30, "Price": 200},
             
-            "switch": {"Quantity": 20, "Price": 50},
+            "switch": {"Quantity": 20, "Price": 100},
             
             "monitor": {"Quantity": 20, "Price": 75},
             
-            "mouse": {"Quantity": 20, "Price": 25},
+            "mouse": {"Quantity": 20, "Price": 10},
             
-            "hard drive": {"Quantity": 25, "Price": 250}
+            "hard drive": {"Quantity": 25, "Price": 100}
 
     }
 
@@ -65,13 +65,14 @@ def beginning():
         joined_electronics = (', '.join(electronics_list))
         print(joined_electronics)
         print()
-            
+
+    # Call the function        
     create_electronics_list()
-            
+
+    # Define function that prompts customer after listing products in stock        
     def purchase_above_prod():
 
-        print("Would you like to purchase one of the above products? [Y/n]")
-        print()
+        print("Would you like to purchase one of the above products? [Y/n]\n")
         
         above_prods = input().lower()
         print()
@@ -80,12 +81,10 @@ def beginning():
             product = enter_product()    
         elif above_prods == 'n':
             print(f"All right, no problem! Hopefully you can find {product}s\n"
-                    "at a different electronics store!")
-            print()
+                    "at a different electronics store!\n")
             exit()
         else:
-            print("Sorry, I didn't understand that. Why don't we start over?")
-            print()
+            print("Sorry, I didn't understand that. Why don't we start over?\n")
             beginning()
 
     def if_product_avail():
