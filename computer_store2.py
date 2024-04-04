@@ -67,6 +67,15 @@ def purchase_above_products():
         print("Sorry, I didn't understand that. Why don't we start over?\n")
         beginning()
 
+
+
+# Call this function only after making a sale to update dictionary/inventory
+def update_stock():
+    # New product quantity in stock after selling some of them to user
+    new_prod_quant = (prod_quant - user_quant)
+    # Update dictionary to reflect new quantity in stock
+    electronics[product]["Quantity"] = new_prod_quant
+
 # The below may not need to be a function, however I will keep it for now 
 # because I can't remember what I had in mind last year lol...
 
@@ -87,7 +96,7 @@ def beginning():
 
     if product not in electronics:
         print(f"\nSorry, we don't carry {product}s at this time. These are the "
-                "products we do carry: \n")
+                "products we do carry:\n")
         # Print the electronics we have in stock, the current stock is dynamic
         print_electronics()
     
@@ -112,39 +121,42 @@ def beginning():
             # Check the value in the dictionary, which is the number of that 
             # product that the store has in stock
             if prod_quant > 0:
-                print(f"We do have {product}s! How many would you like?\n")
+                #print(f"We do have {product}s! How many would you like?\n")
                 
-                user_quant = int(input())
+                # Takes user input and casts it as an integer
+                user_quant = int(input(f"We do have {product}s! How many "
+                                       f"would you like?\n"))
                 
-            
+            # Price total
             total = (user_quant * prod_price)
             
-            # This should probably be its own function # 4/4/24
-            # New product quantity in stock after selling some of them to user
-            new_prod_quant = (prod_quant - quantity)
+            
 
             if quantity == 1:
-                print(f"Great! We do have 1 {product} available. That will be ${prod_price}.")
-                print()
+                print(f"Great! We do have 1 {product} available. That will "
+                      f"be ${prod_price}.\n")
+                
 
-            elif quantity <= prod_quant:
-                total = (quantity * prod_price)
-                print(f"Great! We do have {quantity} {product}s available. That will be ${total}!\n")
+            elif user_quant <= prod_quant:
+                total = (user_quant * prod_price)
+                print(f"Great! We do have {quantity} {product}s available. "
+                      f"That will be ${total}!\n")
                 
             
-            elif quantity > prod_quant:
-                print(f"I'm sorry, we only have {prod_quant} {product}s in stock, " 
-                        "would you like to buy that amount instead? [Y/n]\n")
+            elif user_quant > prod_quant:
+                #print(f"I'm sorry, we only have {prod_quant} {product}s in stock, " 
+                #       "would you like to buy that amount instead? [Y/n]\n")
                 
 
-                buy_max_amount = input().lower()
-                print()
+                buy_max_amount = input(f"I'm sorry, we only have "
+                                       f"{prod_quant} {product}s in stock, "
+                                        "would you like to buy that amount instead? [Y/n]\n")
+    
                 
                 if buy_max_amount == 'y':
                     quantity = prod_quant             
-                    print(f"Great! That will be ${total}!")
-                    print()
-                    new_prod_quant = (prod_quant - quantity)
+                    print(f"Great! That will be ${total}.\n")
+                    new_prod_quant = (prod_quant - user_quant)
                     print(f"This is how many {product}s we have left after "
                           f"the sale: {new_prod_quant}\n")
                     
@@ -158,14 +170,14 @@ def beginning():
                     print()
 
                     if hear_again == 'y':
-                        create_electronics_list()
+                        print_electronics()
                         product = enter_product()
                         print()
                     
                     elif hear_again == 'n':
                         print(f"OK, no problem! Hopefully you can find what\n"
-                                "you're looking for at a different store.")
-                        print()
+                               "you're looking for at a different store.\n")
+                        
         
         #print(f"This is how many {product}s we have left after the sale:")
         #print()
@@ -176,4 +188,6 @@ def beginning():
 
     print()
     if_product_avail()
+
+# This is the first functional call that initiates the program
 beginning()
