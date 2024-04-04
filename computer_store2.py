@@ -45,6 +45,28 @@ def print_electronics():
     # Now we inform the customer of what they can buy at this "store"
     print(f'{joined_electronics}\n')
 
+# Prompt customer again after listing products that are in stock
+def purchase_above_products():
+
+    above_prods = input("Would you like to purchase one of the above\n"
+                        "products? [Y/n]\n")
+    above_prods = above_prods.lower()
+    #return above_prods
+    
+    #above_prods = input().lower()
+    #print()
+    #above_prods = above_prods()
+
+    if above_prods == 'y':
+        product = enter_product()    
+    elif above_prods == 'n':
+        print(f"All right, no problem! Hopefully you can find {product}s\n"
+                "at a different electronics store!\n")
+        exit()
+    else:
+        print("Sorry, I didn't understand that. Why don't we start over?\n")
+        beginning()
+
 # The below may not need to be a function, however I will keep it for now 
 # because I can't remember what I had in mind last year lol...
 
@@ -57,66 +79,47 @@ def beginning():
     # Ask the customer what product they want, how many, give them the total 
     # for their order, and then update the inventory
 
-    # Throughout this program, I use many print() statements to enhance 
-    # legibility in the terminal, e.g. below
+    # I sometimes use print() statements to enhance legibility in the terminal
     print()
 
-    # Call function, capture output
+    # Call function that asks customer what product they want, capture output
     product = enter_product()
 
     if product not in electronics:
         print(f"\nSorry, we don't carry {product}s at this time. These are the "
                 "products we do carry: \n")
-        # Print all of the electronics we have in stock     
+        # Print the electronics we have in stock, the current stock is dynamic
         print_electronics()
     
     elif product in electronics:
+        is_in_stock()
+
+
+    
+    # If product is in our dictionary, then we check whether it is in stock
+    def is_in_stock():
         
-
-    # Prompt customer again after listing products that are in stock
-    def purchase_above_prod():
-
-        above_prods = input("Would you like to purchase one of the above\n"
-                            "products? [Y/n]\n")
-        above_prods = above_prods.lower()
-        #return above_prods
-        
-        #above_prods = input().lower()
-        #print()
-        #above_prods = above_prods()
-
-        if above_prods == 'y':
-            product = enter_product()    
-        elif above_prods == 'n':
-            print(f"All right, no problem! Hopefully you can find {product}s\n"
-                    "at a different electronics store!\n")
-            exit()
-        else:
-            print("Sorry, I didn't understand that. Why don't we start over?\n")
-            beginning()
-
-    def if_product_avail():
-        
-        if product in electronics: 
+        #if product in electronics: 
             
-            # Define variable that will store the quantity available of the product the 
-            # user wants;
+            # Define variable that will store current quantity of the product
             prod_quant = electronics[product]['Quantity']
         
-            # Define variable that will store the price of the product the
-            # user wants
+            # Define variable that will store the price of the product
             prod_price = electronics[product]['Price']
+
+            # The below should maybe be its own function? 4/4/24
 
             # Check the value in the dictionary, which is the number of that 
             # product that the store has in stock
             if prod_quant > 0:
-                print(f"We do have {product}s! How many would you like?")
-                print()
-                quantity = int(input())
-                print()
+                print(f"We do have {product}s! How many would you like?\n")
+                
+                user_quant = int(input())
+                
             
-            total = (quantity * prod_price)
-           
+            total = (user_quant * prod_price)
+            
+            # This should probably be its own function # 4/4/24
             # New product quantity in stock after selling some of them to user
             new_prod_quant = (prod_quant - quantity)
 
@@ -126,13 +129,13 @@ def beginning():
 
             elif quantity <= prod_quant:
                 total = (quantity * prod_price)
-                print(f"Great! We do have {quantity} {product}s available. That will be ${total}!")
-                print()
+                print(f"Great! We do have {quantity} {product}s available. That will be ${total}!\n")
+                
             
             elif quantity > prod_quant:
-                print(f"I'm sorry, we only have {prod_quant} {product}s in stock,\n" 
-                        "would you like to buy that amount instead? [Y/n]")
-                print()
+                print(f"I'm sorry, we only have {prod_quant} {product}s in stock, " 
+                        "would you like to buy that amount instead? [Y/n]\n")
+                
 
                 buy_max_amount = input().lower()
                 print()
@@ -142,10 +145,9 @@ def beginning():
                     print(f"Great! That will be ${total}!")
                     print()
                     new_prod_quant = (prod_quant - quantity)
-                    print(f"This is how many {product}s we have left after the sale:")
-                    print()
-                    print(new_prod_quant)
-                    print()
+                    print(f"This is how many {product}s we have left after "
+                          f"the sale: {new_prod_quant}\n")
+                    
 
                 elif buy_max_amount == 'n':
                     print("OK, no problem. Would you like to know what other\n"
