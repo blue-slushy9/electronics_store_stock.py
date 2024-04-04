@@ -50,6 +50,7 @@ def purchase_above_products():
 
     above_prods = input("Would you like to purchase one of the above\n"
                         "products? [Y/n]\n")
+    # Use lower() to standardize user input, see below
     above_prods = above_prods.lower()
     #return above_prods
     
@@ -67,10 +68,84 @@ def purchase_above_products():
         print("Sorry, I didn't understand that. Why don't we start over?\n")
         beginning()
 
+# If product is in our dictionary, then we check whether it is in stock
+def is_in_stock():
+    
+    #if product in electronics: 
+        
+    # Define variable that will store current quantity of the product
+    prod_quant = electronics[product]['Quantity']
 
+    # Define variable that will store the price of the product
+    prod_price = electronics[product]['Price']
+
+    # The below should maybe be its own function? 4/4/24
+
+    # Check the value in the dictionary, which is the number of that 
+    # product that the store has in stock
+    if prod_quant > 0:
+        #print(f"We do have {product}s! How many would you like?\n")
+        
+        # Takes user input and casts it as an integer
+        user_quant = input(f"We do have {product}s! We currently have "
+                           f"{prod_quant} in stock. How many would you like?")
+        # Just to make output more legible
+        print()
+        # Cast user_quant as integer so we can perform calculations with it
+        user_quant = int(user_quant)
+
+    # We can maybe just embed this in the if statements below    
+    # Calculate price total
+    #total = (user_quant * prod_price)
+
+    if user_quant <= prod_quant:
+        total = (user_quant * prod_price)
+        print(f"Great! That will be ${total}!\n")
+        
+    
+    elif user_quant > prod_quant:
+        buy_max_amount = input("I'm sorry, like I said we only have "
+                              f"{prod_quant} {product}s in stock, would you "
+                               "like to buy that amount instead? [Y/n]\n")
+        
+        if buy_max_amount == 'y':
+            # Update user's desired quantity to quantity currently in stock
+            user_quant = prod_quant             
+            print(f"Great! That will be ${total}.\n")
+            
+            # These lines might need to go in a separate functions, and run at
+            # a later time
+            #new_prod_quant = (prod_quant - user_quant)
+            #print(f"This is how many {product}s we have left after "
+                   #f"the sale: {new_prod_quant}\n")
+            
+
+        elif buy_max_amount == 'n':
+            print("OK, no problem. Would you like to know what other\n"
+                    "products we have for sale again?")
+            print()
+
+            hear_again = input().lower()
+            print()
+
+            if hear_again == 'y':
+                print_electronics()
+                product = enter_product()
+            
+            elif hear_again == 'n':
+                print(f"OK, no problem! Hopefully you can find what "
+                        "you're looking for at a different store.\n")
+                    
+    
+    #print(f"This is how many {product}s we have left after the sale:")
+    #print()
+    #print(new_prod_quant)
+
+# In the case that the product entered by the user is not in the inventory;
+#else:
 
 # Call this function only after making a sale to update dictionary/inventory
-def update_stock():
+def update_stock(prod_quant, user_quant, product):
     # New product quantity in stock after selling some of them to user
     new_prod_quant = (prod_quant - user_quant)
     # Update dictionary to reflect new quantity in stock
@@ -96,7 +171,7 @@ def beginning():
 
     if product not in electronics:
         print(f"\nSorry, we don't carry {product}s at this time. These are the "
-                "products we do carry:\n")
+               "products we do carry:\n")
         # Print the electronics we have in stock, the current stock is dynamic
         print_electronics()
     
@@ -105,89 +180,11 @@ def beginning():
 
 
     
-    # If product is in our dictionary, then we check whether it is in stock
-    def is_in_stock():
-        
-        #if product in electronics: 
-            
-            # Define variable that will store current quantity of the product
-            prod_quant = electronics[product]['Quantity']
-        
-            # Define variable that will store the price of the product
-            prod_price = electronics[product]['Price']
-
-            # The below should maybe be its own function? 4/4/24
-
-            # Check the value in the dictionary, which is the number of that 
-            # product that the store has in stock
-            if prod_quant > 0:
-                #print(f"We do have {product}s! How many would you like?\n")
-                
-                # Takes user input and casts it as an integer
-                user_quant = int(input(f"We do have {product}s! How many "
-                                       f"would you like?\n"))
-                
-            # Price total
-            total = (user_quant * prod_price)
-            
-            
-
-            if quantity == 1:
-                print(f"Great! We do have 1 {product} available. That will "
-                      f"be ${prod_price}.\n")
-                
-
-            elif user_quant <= prod_quant:
-                total = (user_quant * prod_price)
-                print(f"Great! We do have {quantity} {product}s available. "
-                      f"That will be ${total}!\n")
-                
-            
-            elif user_quant > prod_quant:
-                #print(f"I'm sorry, we only have {prod_quant} {product}s in stock, " 
-                #       "would you like to buy that amount instead? [Y/n]\n")
-                
-
-                buy_max_amount = input(f"I'm sorry, we only have "
-                                       f"{prod_quant} {product}s in stock, "
-                                        "would you like to buy that amount instead? [Y/n]\n")
     
-                
-                if buy_max_amount == 'y':
-                    quantity = prod_quant             
-                    print(f"Great! That will be ${total}.\n")
-                    new_prod_quant = (prod_quant - user_quant)
-                    print(f"This is how many {product}s we have left after "
-                          f"the sale: {new_prod_quant}\n")
-                    
-
-                elif buy_max_amount == 'n':
-                    print("OK, no problem. Would you like to know what other\n"
-                            "products we have for sale again?")
-                    print()
-
-                    hear_again = input().lower()
-                    print()
-
-                    if hear_again == 'y':
-                        print_electronics()
-                        product = enter_product()
-                        print()
-                    
-                    elif hear_again == 'n':
-                        print(f"OK, no problem! Hopefully you can find what\n"
-                               "you're looking for at a different store.\n")
-                        
-        
-        #print(f"This is how many {product}s we have left after the sale:")
-        #print()
-        #print(new_prod_quant)
-
-    # In the case that the product entered by the user is not in the inventory;
-    #else:
 
     print()
-    if_product_avail()
+# Verifies whether product is currently in stock
+is_in_stock()
 
 # This is the first functional call that initiates the program
 beginning()
