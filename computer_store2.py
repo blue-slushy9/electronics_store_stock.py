@@ -24,10 +24,10 @@ electronics = {
 
 # Prompts the user for their desired product and returns the input
 def enter_product():
-    #print("Please enter the name of the product you would like to buy now: ")
     product = input("Please enter the name of the product you would like "
                     "to buy now: ")
-    #print()
+    # Throughout this program, print() is sometimes used to enhance legibility
+    print()
     return product
 
 # Creates a list of all of the electronics carried by the store, and then 
@@ -43,23 +43,21 @@ def print_electronics():
     
     joined_electronics = (', '.join(electronics_list))
     # Now we inform the customer of what they can buy at this "store"
-    print(f'{joined_electronics}\n')
+    print(joined_electronics)
+    print()
 
 # Prompt customer again after listing products that are in stock
-def purchase_above_products():
+def purchase_above_products(product):
 
     above_prods = input("Would you like to purchase one of the above\n"
                         "products? [Y/n]\n")
     # Use lower() to standardize user input, see below
     above_prods = above_prods.lower()
-    #return above_prods
-    
-    #above_prods = input().lower()
-    #print()
-    #above_prods = above_prods()
 
     if above_prods == 'y':
-        product = enter_product()    
+        #product = enter_product()
+        # Go back to beginning of program
+        beginning()
     elif above_prods == 'n':
         print(f"All right, no problem! Hopefully you can find {product}s\n"
                 "at a different electronics store!\n")
@@ -69,7 +67,7 @@ def purchase_above_products():
         beginning()
 
 # If product is in our dictionary, then we check whether it is in stock
-def is_in_stock():
+def is_in_stock(product):
     
     #if product in electronics: 
         
@@ -88,7 +86,7 @@ def is_in_stock():
         
         # Takes user input and casts it as an integer
         user_quant = input(f"We do have {product}s! We currently have "
-                           f"{prod_quant} in stock. How many would you like?")
+                           f"{prod_quant} in stock. How many would you like? ")
         # Just to make output more legible
         print()
         # Cast user_quant as integer so we can perform calculations with it
@@ -100,7 +98,7 @@ def is_in_stock():
 
     if user_quant <= prod_quant:
         total = (user_quant * prod_price)
-        print(f"Great! That will be ${total}!\n")
+        print(f"Great! That will be ${total}!")
         
     
     elif user_quant > prod_quant:
@@ -121,9 +119,8 @@ def is_in_stock():
             
 
         elif buy_max_amount == 'n':
-            print("OK, no problem. Would you like to know what other\n"
-                    "products we have for sale again?")
-            print()
+            print("OK, no problem. Would you like to hear again what " 
+                  "products we have for sale? [Y/n]\n")
 
             hear_again = input().lower()
             print()
@@ -133,8 +130,8 @@ def is_in_stock():
                 product = enter_product()
             
             elif hear_again == 'n':
-                print(f"OK, no problem! Hopefully you can find what "
-                        "you're looking for at a different store.\n")
+                print("OK, no problem! Hopefully you can find what you're "
+                      "looking for at a different store.\n")
                     
     
     #print(f"This is how many {product}s we have left after the sale:")
@@ -170,21 +167,20 @@ def beginning():
     product = enter_product()
 
     if product not in electronics:
-        print(f"\nSorry, we don't carry {product}s at this time. These are the "
+        print(f"Sorry, we don't carry {product}s at this time. These are the "
                "products we do carry:\n")
         # Print the electronics we have in stock, the current stock is dynamic
         print_electronics()
+        # Prompt the user whether they want to purchase something now
+        purchase_above_products(product)
     
     elif product in electronics:
-        is_in_stock()
-
-
-    
-    
-
+        is_in_stock(product)
+    # For legibility
     print()
+
 # Verifies whether product is currently in stock
-is_in_stock()
+#is_in_stock(product)
 
 # This is the first functional call that initiates the program
 beginning()
