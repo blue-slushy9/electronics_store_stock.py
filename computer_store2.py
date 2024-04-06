@@ -1,3 +1,11 @@
+# NOTES
+
+# 4/5/24
+
+# Left off at is_in_stock() function after attempting to purchase another
+# product that was already sold out! 
+# "UnboundLocalError: local variable 'user_quant' referenced before assignment"
+
 # Made this copy of the original program file for experimentation!
 
 # Create a dictionary of products for sale at an electronics store, how 
@@ -12,11 +20,11 @@ electronics = {
         
         "router": {"Quantity": 30, "Price": 200},
         
-        "switch": {"Quantity": 20, "Price": 100},
+        "switch": {"Quantity": 20, "Price": 100, "Plural": "switches"},
         
         "monitor": {"Quantity": 20, "Price": 75},
         
-        "mouse": {"Quantity": 20, "Price": 10},
+        "mouse": {"Quantity": 20, "Price": 10, "Plural": "mice"},
         
         "hard drive": {"Quantity": 25, "Price": 100}
 
@@ -28,6 +36,7 @@ def enter_product():
                     "to buy now: ")
     # Throughout this program, print() is sometimes used to enhance legibility
     print()
+    product = product.lower()
     return product
 
 # Creates a list of all of the electronics carried by the store, and then 
@@ -49,7 +58,7 @@ def print_electronics():
 # Prompt customer again after listing products that are in stock
 def purchase_above_products(product):
 
-    above_prods = input("Would you like to purchase one of the above\n"
+    above_prods = input("Would you like to purchase one of the above "
                         "products? [Y/n]\n")
     # Use lower() to standardize user input, see below
     above_prods = above_prods.lower()
@@ -59,8 +68,9 @@ def purchase_above_products(product):
         # Go back to beginning of program
         beginning()
     elif above_prods == 'n':
-        print(f"All right, no problem! Hopefully you can find {product}s\n"
-                "at a different electronics store!\n")
+        print()
+        print(f"All right, no problem! Hopefully you can find {product}s "
+                "at a different electronics store.\n")
         exit()
     else:
         print("Sorry, I didn't understand that. Why don't we start over?\n")
@@ -68,8 +78,6 @@ def purchase_above_products(product):
 
 # If product is in our dictionary, then we check whether it is in stock
 def is_in_stock(product):
-    
-    #if product in electronics: 
         
     # Define variable that will store current quantity of the product
     prod_quant = electronics[product]['Quantity']
@@ -98,8 +106,11 @@ def is_in_stock(product):
 
     if user_quant <= prod_quant:
         total = (user_quant * prod_price)
-        print(f"Great! That will be ${total}!")
-        
+        print(f"Great! That will be ${total}!\n")
+        update_stock(prod_quant, user_quant, product)
+        # DEBUG
+        print(f'Updated stock: {electronics[product]["Quantity"]}\n')
+        make_another_purchase()
     
     elif user_quant > prod_quant:
         buy_max_amount = input("I'm sorry, like I said we only have "
@@ -108,8 +119,15 @@ def is_in_stock(product):
         
         if buy_max_amount == 'y':
             # Update user's desired quantity to quantity currently in stock
-            user_quant = prod_quant             
+            user_quant = prod_quant
+            # Calculate price total
+            total = (user_quant * prod_price) # Repeat code, look above
+            print()
             print(f"Great! That will be ${total}.\n")
+            update_stock(prod_quant, user_quant, product)
+            # DEBUG
+            print(f'Updated stock: {electronics[product]["Quantity"]}\n')
+            make_another_purchase()
             
             # These lines might need to go in a separate functions, and run at
             # a later time
@@ -119,15 +137,17 @@ def is_in_stock(product):
             
 
         elif buy_max_amount == 'n':
+            print()
             print("OK, no problem. Would you like to hear again what " 
-                  "products we have for sale? [Y/n]\n")
+                  "products we have for sale? [Y/n]")
 
             hear_again = input().lower()
             print()
 
             if hear_again == 'y':
                 print_electronics()
-                product = enter_product()
+                #product = enter_product()
+                beginning()
             
             elif hear_again == 'n':
                 print("OK, no problem! Hopefully you can find what you're "
@@ -147,6 +167,19 @@ def update_stock(prod_quant, user_quant, product):
     new_prod_quant = (prod_quant - user_quant)
     # Update dictionary to reflect new quantity in stock
     electronics[product]["Quantity"] = new_prod_quant
+
+# This will run after user has made initial purchase
+def make_another_purchase():
+    # NOTE: with the input() statements, you must use \n instead of print()
+    buy_more = input("Would you like to purchase anything else? [Y/n]\n")
+    # Control for non-conforming user input by setting to lower-case
+    buy_more = buy_more.lower()
+    if buy_more == 'y':
+        beginning()
+    elif buy_more == 'n':
+        print()
+        print("OK, no problem! Thank you for shopping here.\n")
+
 
 # The below may not need to be a function, however I will keep it for now 
 # because I can't remember what I had in mind last year lol...
@@ -174,10 +207,14 @@ def beginning():
         # Prompt the user whether they want to purchase something now
         purchase_above_products(product)
     
+    # Our store does carry the product... 
     elif product in electronics:
-        is_in_stock(product)
+        # But we need to verify it's in stock
+        #quantity = electronics[product]["Quantity"]
+        #if quantity > 0:
+            is_in_stock(product)
     # For legibility
-    print()
+    #print()
 
 # Verifies whether product is currently in stock
 #is_in_stock(product)
