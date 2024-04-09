@@ -109,7 +109,6 @@ def is_in_stock(product):
     prod_price = electronics[product]['Price']
 
     plural = electronics[product]["Plural"]
-    print(f'plural: {plural}\n')
 
     # The below should maybe be its own function? 4/4/24
 
@@ -136,7 +135,7 @@ def is_in_stock(product):
         print(f"Great! That will be ${total}!\n")
         update_stock(prod_quant, user_quant, product)
         # DEBUG
-        print(f'Updated stock: {electronics[product]["Quantity"]}\n')
+        print(f'Updated {product} stock: {electronics[product]["Quantity"]}\n')
         make_another_purchase()
     
     elif user_quant > prod_quant:
@@ -153,7 +152,8 @@ def is_in_stock(product):
             print(f"Great! That will be ${total}.\n")
             update_stock(prod_quant, user_quant, product)
             # DEBUG
-            print(f'Updated stock: {electronics[product]["Quantity"]}\n')
+            print(f'Updated {product} stock: {prod_quant}
+            #print(f'Updated {product} stock: {electronics[product]["Quantity"]}\n')
             make_another_purchase()
 
         elif buy_max_amount == 'n':
