@@ -16,6 +16,9 @@
 
 # Made this copy of the original program file for experimentation!
 
+# sys.exit() terminates the program, exit status code is optional
+from sys import exit
+
 # Create a dictionary of products for sale at an electronics store, how 
 # many of that item the store has in stock, and the price for each item; 
 # please note that the prices are in dollars but I had to omit the $ signs;
@@ -57,16 +60,19 @@ def print_electronics():
     # Iterate over singular device names in dictionary and append to items
     for device in electronics:
         singular_names.append(device)
-    # Iterate over newly created list to get the device's plural name
-    for item in singular_names:
+    # Iterate over newly created list to get the device's plural name, we use
+    # i in order to be able to capitalize the first letter of the first item
+    for i in range(len(singular_names)):
+        item = singular_names[i]
         plural_name = electronics[item]["Plural"]
-        print(f'plural_name: {plural_name}\n')
-        # Since laptops is the first item, we want the 'l' to be capitalized
-        if plural_name == "laptops":
-            plural_name == "Laptops"
+        # Since 'laptops' is the first item, we want the 'l' to be capitalized
+        if i == 0:
+            # The capitalize() method capitalizes the first letter only and
+            # converts all following letters to lower-case
+            plural_name = plural_name.capitalize()
         # Create a new list that will store the plural names
         plural_electronics.append(plural_name)
-    # Use the join() method to turn our list into a string
+    # Use join() method to turn our list into a string with ',' as separator
     joined_electronics = (', '.join(plural_electronics))
     # Now we inform the customer of everything they can buy at this store
     print(joined_electronics+'.')
@@ -89,6 +95,7 @@ def purchase_above_products(product):
                "looking for at a different electronics store.\n")
         exit()
     else:
+        print()
         print("Sorry, I didn't understand that. Why don't we start over?\n")
         beginning()
 
@@ -101,11 +108,14 @@ def is_in_stock(product):
     # Define variable that will store the price of the product, single unit
     prod_price = electronics[product]['Price']
 
+    plural = electronics[product]["Plural"]
+    print(f'plural: {plural}\n')
+
     # The below should maybe be its own function? 4/4/24
 
     # If customer has already purchased all of the product in stock
     if prod_quant <= 0:
-        print(f"Sorry, I'm afraid we are all sold out of {product}s.\n")
+        print(f"Sorry, I'm afraid we are all sold out of {plural}.\n")
         make_another_purchase()
 
     # Check the value in the dictionary, which is the number of that 
@@ -113,7 +123,7 @@ def is_in_stock(product):
     elif prod_quant > 0:
         
         # Takes user input and casts it as an integer
-        user_quant = input(f"We do have {product}s! We currently have "
+        user_quant = input(f"We do have {plural}! We currently have "
                            f"{prod_quant} in stock. How many would you like? ")
         # Just to make output more legible
         print()
@@ -131,7 +141,7 @@ def is_in_stock(product):
     
     elif user_quant > prod_quant:
         buy_max_amount = input("I'm sorry, like I said we only have "
-                              f"{prod_quant} {product}s in stock, would you "
+                              f"{prod_quant} {plural} in stock, would you "
                                "like to buy that amount instead? [Y/n]\n")
         
         if buy_max_amount == 'y':
@@ -145,13 +155,6 @@ def is_in_stock(product):
             # DEBUG
             print(f'Updated stock: {electronics[product]["Quantity"]}\n')
             make_another_purchase()
-            
-            # These lines might need to go in a separate functions, and run at
-            # a later time
-            #new_prod_quant = (prod_quant - user_quant)
-            #print(f"This is how many {product}s we have left after "
-                   #f"the sale: {new_prod_quant}\n")
-            
 
         elif buy_max_amount == 'n':
             print()
@@ -168,11 +171,6 @@ def is_in_stock(product):
             elif hear_again == 'n':
                 print("OK, no problem! Hopefully you can find what you're "
                       "looking for at a different store.\n")
-                    
-    
-    #print(f"This is how many {product}s we have left after the sale:")
-    #print()
-    #print(new_prod_quant)
 
 # In the case that the product entered by the user is not in the inventory;
 #else:
@@ -205,7 +203,7 @@ def make_another_purchase():
 # function definition in order to restart the program as needed
 def beginning():
     # sys.exit() terminates the program, exit status code is optional
-    from sys import exit
+    #from sys import exit # 4/9/24: moved to top of program file
 
     # Ask the customer what product they want, how many, give them the total 
     # for their order, and then update the inventory
@@ -224,17 +222,10 @@ def beginning():
         # Prompt the user whether they want to purchase something now
         purchase_above_products(product)
     
-    # Our store does carry the product... 
+    # Our store does carry the product...
     elif product in electronics:
-        # But we need to verify it's in stock
-        #quantity = electronics[product]["Quantity"]
-        #if quantity > 0:
-            is_in_stock(product)
-    # For legibility
-    #print()
-
-# Verifies whether product is currently in stock
-#is_in_stock(product)
+        # But we need to verify if it's in stock # 4/9/24: unindented these
+        is_in_stock(product)                     # two lines
 
 # This is the first functional call that initiates the program
 beginning()
