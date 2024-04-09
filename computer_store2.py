@@ -1,10 +1,18 @@
 # NOTES
 
+# 4/8/24
+
+# Left off around line 65 or so, dealing with a weird bug. I am trying to get
+# 'laptops' to correct to 'Laptops' since it's the first item in my list, but
+# my if statement that i wrote for that isn't catching it, quite strange...
+
 # 4/5/24
 
 # Left off at is_in_stock() function after attempting to purchase another
 # product that was already sold out! 
 # "UnboundLocalError: local variable 'user_quant' referenced before assignment"
+
+##############################################################################
 
 # Made this copy of the original program file for experimentation!
 
@@ -14,19 +22,19 @@
 
 electronics = {
         
-        "laptop": {"Quantity": 100, "Price": 300},
+        "laptop": {"Quantity": 100, "Price": 300, "Plural": "laptops"},
         
-        "desktop": {"Quantity": 50, "Price": 500},
+        "desktop": {"Quantity": 50, "Price": 500, "Plural": "desktops"},
         
-        "router": {"Quantity": 30, "Price": 200},
+        "router": {"Quantity": 30, "Price": 200, "Plural": "routers"},
         
         "switch": {"Quantity": 20, "Price": 100, "Plural": "switches"},
         
-        "monitor": {"Quantity": 20, "Price": 75},
+        "monitor": {"Quantity": 20, "Price": 75, "Plural": "monitors"},
         
         "mouse": {"Quantity": 20, "Price": 10, "Plural": "mice"},
         
-        "hard drive": {"Quantity": 25, "Price": 100}
+        "hard drive": {"Quantity": 25, "Price": 100, "Plural": "hard drives"}
 
 }
 
@@ -42,22 +50,30 @@ def enter_product():
 # Creates a list of all of the electronics carried by the store, and then 
 # joins them into string format, with each product separated by a comma
 def print_electronics():
-
-    # Create a list for all of our electronics
-    electronics_list = []
-    
-    # electronics is the dictionary, this iterates over its keys
-    for item in electronics:
-        electronics_list.append(item)
-    
-    joined_electronics = (', '.join(electronics_list))
-    # Now we inform the customer of what they can buy at this "store"
-    print(joined_electronics)
+    # Create a list for the plural names of our electronics
+    plural_electronics = []
+    # Create some lists to get to the plural forms of our devices in stock
+    singular_names = []
+    # Iterate over singular device names in dictionary and append to items
+    for device in electronics:
+        singular_names.append(device)
+    # Iterate over newly created list to get the device's plural name
+    for item in singular_names:
+        plural_name = electronics[item]["Plural"]
+        print(f'plural_name: {plural_name}\n')
+        # Since laptops is the first item, we want the 'l' to be capitalized
+        if plural_name == "laptops":
+            plural_name == "Laptops"
+        # Create a new list that will store the plural names
+        plural_electronics.append(plural_name)
+    # Use the join() method to turn our list into a string
+    joined_electronics = (', '.join(plural_electronics))
+    # Now we inform the customer of everything they can buy at this store
+    print(joined_electronics+'.')
     print()
 
 # Prompt customer again after listing products that are in stock
 def purchase_above_products(product):
-
     above_prods = input("Would you like to purchase one of the above "
                         "products? [Y/n]\n")
     # Use lower() to standardize user input, see below
@@ -69,8 +85,8 @@ def purchase_above_products(product):
         beginning()
     elif above_prods == 'n':
         print()
-        print(f"All right, no problem! Hopefully you can find {product}s "
-                "at a different electronics store.\n")
+        print(f"All right, no problem! Hopefully you can find what you are "
+               "looking for at a different electronics store.\n")
         exit()
     else:
         print("Sorry, I didn't understand that. Why don't we start over?\n")
@@ -82,15 +98,19 @@ def is_in_stock(product):
     # Define variable that will store current quantity of the product
     prod_quant = electronics[product]['Quantity']
 
-    # Define variable that will store the price of the product
+    # Define variable that will store the price of the product, single unit
     prod_price = electronics[product]['Price']
 
     # The below should maybe be its own function? 4/4/24
 
+    # If customer has already purchased all of the product in stock
+    if prod_quant <= 0:
+        print(f"Sorry, I'm afraid we are all sold out of {product}s.\n")
+        make_another_purchase()
+
     # Check the value in the dictionary, which is the number of that 
     # product that the store has in stock
-    if prod_quant > 0:
-        #print(f"We do have {product}s! How many would you like?\n")
+    elif prod_quant > 0:
         
         # Takes user input and casts it as an integer
         user_quant = input(f"We do have {product}s! We currently have "
@@ -100,10 +120,7 @@ def is_in_stock(product):
         # Cast user_quant as integer so we can perform calculations with it
         user_quant = int(user_quant)
 
-    # We can maybe just embed this in the if statements below    
-    # Calculate price total
-    #total = (user_quant * prod_price)
-
+    # Ensure customer doesn't want more of the product than we have in stock
     if user_quant <= prod_quant:
         total = (user_quant * prod_price)
         print(f"Great! That will be ${total}!\n")
@@ -146,7 +163,6 @@ def is_in_stock(product):
 
             if hear_again == 'y':
                 print_electronics()
-                #product = enter_product()
                 beginning()
             
             elif hear_again == 'n':
@@ -179,6 +195,7 @@ def make_another_purchase():
     elif buy_more == 'n':
         print()
         print("OK, no problem! Thank you for shopping here.\n")
+        exit()
 
 
 # The below may not need to be a function, however I will keep it for now 
@@ -200,8 +217,8 @@ def beginning():
     product = enter_product()
 
     if product not in electronics:
-        print(f"Sorry, we don't carry {product}s at this time. These are the "
-               "products we do carry:\n")
+        print(f"Sorry, we don't carry that product. These are the products "
+               "we do carry:\n")
         # Print the electronics we have in stock, the current stock is dynamic
         print_electronics()
         # Prompt the user whether they want to purchase something now
