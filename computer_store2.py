@@ -1,5 +1,11 @@
 # NOTES
 
+# 4/9/24
+
+# Left off around line 215. Working on getting the function that takes the
+# desired product as input to accept either the singular and plural form of
+# the device name.
+
 # 4/8/24
 
 # Left off around line 65 or so, dealing with a weird bug. I am trying to get
@@ -96,7 +102,7 @@ def purchase_above_products(product):
         exit()
     else:
         print()
-        print("Sorry, I didn't understand that. Why don't we start over?\n")
+        print("Sorry, I didn't understand that. Why don't we start over?")
         beginning()
 
 # If product is in our dictionary, then we check whether it is in stock
@@ -152,7 +158,7 @@ def is_in_stock(product):
             print(f"Great! That will be ${total}.\n")
             update_stock(prod_quant, user_quant, product)
             # DEBUG
-            print(f'Updated {product} stock: {prod_quant}
+            print(f'Updated {product} stock: {prod_quant}\n')
             #print(f'Updated {product} stock: {electronics[product]["Quantity"]}\n')
             make_another_purchase()
 
@@ -171,9 +177,6 @@ def is_in_stock(product):
             elif hear_again == 'n':
                 print("OK, no problem! Hopefully you can find what you're "
                       "looking for at a different store.\n")
-
-# In the case that the product entered by the user is not in the inventory;
-#else:
 
 # Call this function only after making a sale to update dictionary/inventory
 def update_stock(prod_quant, user_quant, product):
@@ -195,12 +198,9 @@ def make_another_purchase():
         print("OK, no problem! Thank you for shopping here.\n")
         exit()
 
-
-# The below may not need to be a function, however I will keep it for now 
-# because I can't remember what I had in mind last year lol...
-
 # You can encapsulate your entire program, or portions of it, inside of a
-# function definition in order to restart the program as needed
+# function definition in order to restart the program as needed; this is
+# similar to the main() function in C
 def beginning():
     # sys.exit() terminates the program, exit status code is optional
     #from sys import exit # 4/9/24: moved to top of program file
@@ -212,9 +212,17 @@ def beginning():
     print()
 
     # Call function that asks customer what product they want, capture output
-    product = enter_product()
-
+    product = enter_product() # 4/9/24: customer still has to enter singular
+    # If the product entered does not match outer keys (singular product name)
     if product not in electronics:
+        for i in len(range(electronics))
+        # For easy access to plural form of product
+        plural_dict = electronics[x]["Plural"]
+        if product in plural_dict
+        # Capture the plural form of the product name to make it easier to order
+        plural = plural_dict
+
+    if product not in electronics or plural not in plural_dict:
         print(f"Sorry, we don't carry that product. These are the products "
                "we do carry:\n")
         # Print the electronics we have in stock, the current stock is dynamic
@@ -223,7 +231,7 @@ def beginning():
         purchase_above_products(product)
     
     # Our store does carry the product...
-    elif product in electronics:
+    elif product in electronics or plural in plural_dict:
         # But we need to verify if it's in stock # 4/9/24: unindented these
         is_in_stock(product)                     # two lines
 
