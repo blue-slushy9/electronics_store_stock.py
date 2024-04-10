@@ -1,5 +1,12 @@
 # NOTES
 
+# 4/10/24
+
+# Despite specifically attempting to add the feature, the program still
+# doesn't seem to be accepting the plural form of the products when ordering.
+# Will continue debugging, problem seems to be at "Please enter the name of
+# the product you would like to buy now".
+
 # 4/9/24
 
 # Left off around line 215. Working on getting the function that takes the
@@ -105,18 +112,26 @@ def purchase_above_products(product):
         print("Sorry, I didn't understand that. Why don't we start over?")
         beginning()
 
-# If product is in our dictionary, then we check whether it is in stock
-def is_in_stock(product):
-        
+# This will run after user has made initial purchase
+def make_another_purchase():
+    # NOTE: with the input() statements, you must use \n instead of print()
+    buy_more = input("Would you like to purchase anything else? [Y/n]\n")
+    # Control for non-conforming user input by setting to lower-case
+    buy_more = buy_more.lower()
+    if buy_more == 'y':
+        beginning()
+    elif buy_more == 'n':
+        print()
+        print("OK, no problem! Thank you for shopping here.\n")
+        exit()
+
+# The below should maybe be its own function? 4/4/24
+def transaction(product):
     # Define variable that will store current quantity of the product
     prod_quant = electronics[product]['Quantity']
-
     # Define variable that will store the price of the product, single unit
     prod_price = electronics[product]['Price']
-
-    plural = electronics[product]["Plural"]
-
-    # The below should maybe be its own function? 4/4/24
+    plural = electronics[product]['Plural']
 
     # If customer has already purchased all of the product in stock
     if prod_quant <= 0:
@@ -129,7 +144,7 @@ def is_in_stock(product):
         
         # Takes user input and casts it as an integer
         user_quant = input(f"We do have {plural}! We currently have "
-                           f"{prod_quant} in stock. How many would you like? ")
+                        f"{prod_quant} in stock. How many would you like? ")
         # Just to make output more legible
         print()
         # Cast user_quant as integer so we can perform calculations with it
@@ -146,8 +161,8 @@ def is_in_stock(product):
     
     elif user_quant > prod_quant:
         buy_max_amount = input("I'm sorry, like I said we only have "
-                              f"{prod_quant} {plural} in stock, would you "
-                               "like to buy that amount instead? [Y/n]\n")
+                            f"{prod_quant} {plural} in stock, would you "
+                            "like to buy that amount instead? [Y/n]\n")
         
         if buy_max_amount == 'y':
             # Update user's desired quantity to quantity currently in stock
@@ -165,8 +180,9 @@ def is_in_stock(product):
         elif buy_max_amount == 'n':
             print()
             print("OK, no problem. Would you like to hear again what " 
-                  "products we have for sale? [Y/n]")
-
+                "products we have for sale? [Y/n]")
+            
+            # This variable just stores their response to the question
             hear_again = input().lower()
             print()
 
@@ -176,7 +192,28 @@ def is_in_stock(product):
             
             elif hear_again == 'n':
                 print("OK, no problem! Hopefully you can find what you're "
-                      "looking for at a different store.\n")
+                    "looking for at a different store.\n")
+
+# If product is in our dictionary, then we check whether it is in stock
+def is_in_stock(product):        
+    # If user has provided a valid singular product name
+    if product in electronics:
+        # Call function that will process transaction
+        transaction(product)
+
+    # Else if user has provided a valid plural product name
+    elif product not in electronics:                
+        # Create a list to store all plural names of products
+        plural_names = []
+        # Assign dictionary keys that store plural product names to variable
+        plural_product = electronics[product]['Plural']
+        # Iterate over singular product names and...
+        for product in electronics:
+            # add their plural names to list
+            plural_names.append(plural_product)
+        # If user has provided a valid plural product name
+        if product in plural_names:
+            transaction(product)
 
 # Call this function only after making a sale to update dictionary/inventory
 def update_stock(prod_quant, user_quant, product):
@@ -185,55 +222,45 @@ def update_stock(prod_quant, user_quant, product):
     # Update dictionary to reflect new quantity in stock
     electronics[product]["Quantity"] = new_prod_quant
 
-# This will run after user has made initial purchase
-def make_another_purchase():
-    # NOTE: with the input() statements, you must use \n instead of print()
-    buy_more = input("Would you like to purchase anything else? [Y/n]\n")
-    # Control for non-conforming user input by setting to lower-case
-    buy_more = buy_more.lower()
-    if buy_more == 'y':
-        beginning()
-    elif buy_more == 'n':
-        print()
-        print("OK, no problem! Thank you for shopping here.\n")
-        exit()
-
 # You can encapsulate your entire program, or portions of it, inside of a
 # function definition in order to restart the program as needed; this is
 # similar to the main() function in C
 def beginning():
-    # sys.exit() terminates the program, exit status code is optional
-    #from sys import exit # 4/9/24: moved to top of program file
-
-    # Ask the customer what product they want, how many, give them the total 
-    # for their order, and then update the inventory
-
     # I sometimes use print() statements to enhance legibility in the terminal
     print()
 
     # Call function that asks customer what product they want, capture output
-    product = enter_product() # 4/9/24: customer still has to enter singular
-    # If the product entered does not match outer keys (singular product name)
-    if product not in electronics:
-        for i in len(range(electronics))
-        # For easy access to plural form of product
-        plural_dict = electronics[x]["Plural"]
-        if product in plural_dict
-        # Capture the plural form of the product name to make it easier to order
-        plural = plural_dict
+    product = enter_product()
 
-    if product not in electronics or plural not in plural_dict:
-        print(f"Sorry, we don't carry that product. These are the products "
-               "we do carry:\n")
-        # Print the electronics we have in stock, the current stock is dynamic
-        print_electronics()
-        # Prompt the user whether they want to purchase something now
-        purchase_above_products(product)
+    # If the product entered is a valid singular product name...
+    if product in electronics:
+        # Then we move onto the next step of checking if it's in stock
+        is_in_stock(product)
     
-    # Our store does carry the product...
-    elif product in electronics or plural in plural_dict:
-        # But we need to verify if it's in stock # 4/9/24: unindented these
-        is_in_stock(product)                     # two lines
+    # Else if the product entered is not a valid singular product name, 
+    # then we check whether it is a valid plural product name
+    elif product not in electronics:
+        # Create a list to store all of the plural product names
+        plural_names = []
+        # Iterate over outer dictionary keys to get singular product names
+        for product in electronics:
+            # Create variable to store the value of the inner "Plural" key
+            plural_product = electronics[product]["Plural"]
+            # Add the plural product name to list
+            plural_names.append(plural_product)
+        # If the user entered a valid plural product name
+        if product in plural_names:
+            # is_in_stock() accepts either singular or plural product names
+            is_in_stock(product)
+        
+        # Else if product is not a valid singular or plural product name
+        elif product not in plural_names:
+            print(f"Sorry, we don't carry that product. These are the products "
+               "we do carry:\n")
+            # Print the electronics we have in stock, the current stock is dynamic
+            print_electronics()
+            # Prompt the user whether they want to purchase something now
+            purchase_above_products(product)
 
 # This is the first functional call that initiates the program
 beginning()
