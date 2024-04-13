@@ -1,5 +1,12 @@
 # NOTES
 
+# 4/12/24
+
+# Found a bug that is similar to the one from yesterday. Added some code to
+# control for negative values in the product quantities and it does work on
+# the first or second attempt, however if I enter many invalid numbers
+# consecutively then when I finally do enter a valid number, I get an error.
+
 # 4/11/24
 
 # Fixed the bug with the program not accepting plural product names, as well
@@ -112,6 +119,21 @@ def make_another_purchase():
         print("OK, no problem! Thank you for shopping here.\n")
         exit()
 
+# Prompt user for valid quantity
+def enter_valid_quant():
+    # Update user_quant to an accepted value
+    user_quant = input('Please enter an integer (i.e. whole number) '
+                       'greater than zero: ')
+    print()
+    # Cast user_quant as integer
+    user_quant = int(user_quant)
+    # Make sure user entered valid quantity this time
+    if user_quant > 0:
+        return user_quant
+    elif user_quant <= 0:
+        # Call function recursively if user enters invalid number again
+        enter_valid_quant()
+
 # This function handles the mechanics of the actual transaction process
 def transaction(product):
     # Define variable that will store current quantity of the product
@@ -128,7 +150,6 @@ def transaction(product):
     # Check the value in the dictionary, which is the number of that 
     # product that the store has in stock
     elif prod_quant > 0:
-        
         # Takes user input and casts it as an integer
         user_quant = input(f"We do have {plural}! We currently have "
                         f"{prod_quant} in stock. How many would you like? ")
@@ -137,19 +158,29 @@ def transaction(product):
         # Cast user_quant as integer so we can perform calculations with it
         user_quant = int(user_quant)
 
-    # Ensure customer doesn't want more of the product than we have in stock
+    # If user entered a number less than 0...
+    if user_quant < 0:
+        # call the function that prompts for valid input
+        user_quant = enter_valid_quant()
+        print(f'inside if statement: {user_quant}\n')
+    # DEBUG
+    print(f'user_quant: {user_quant}\n')
+    print(f'type: {type(user_quant)}\n')
+
+    # Ensure customer doesn't want more of product than we have in stock
     if user_quant <= prod_quant:
         total = (user_quant * prod_price)
         print(f"Great! That will be ${total}!\n")
         update_stock(prod_quant, user_quant, product)
         # DEBUG
-        print(f'Updated {product} stock: {electronics[product]["Quantity"]}\n')
+        print(f'Updated {product} stock: '
+              f'{electronics[product]["Quantity"]}\n')
         make_another_purchase()
     
     elif user_quant > prod_quant:
         buy_max_amount = input("I'm sorry, like I said we only have "
-                            f"{prod_quant} {plural} in stock, would you "
-                            "like to buy that amount instead? [Y/n]\n")
+                              f"{prod_quant} {plural} in stock, would you "
+                               "like to buy that amount instead? [Y/n]\n")
         
         if buy_max_amount == 'y':
             # Update user's desired quantity to quantity currently in stock
@@ -161,12 +192,11 @@ def transaction(product):
             update_stock(prod_quant, user_quant, product)
             # DEBUG
             print(f'Updated {product} stock: {prod_quant}\n')
-            #print(f'Updated {product} stock: {electronics[product]["Quantity"]}\n')
             make_another_purchase()
 
         elif buy_max_amount == 'n':
             print()
-            print("OK, no problem. Would you like to hear again what " 
+            print("OK, no problem. Would you like to hear again what "
                 "products we have for sale? [Y/n]")
             
             # This variable just stores their response to the question
@@ -182,7 +212,7 @@ def transaction(product):
                     "looking for at a different store.\n")
 
 # If product is in our dictionary, then we check whether it is in stock
-def is_in_stock(product):        
+def is_in_stock(product):
     # If user has provided a valid singular product name
     if product in electronics:
         # Call function that will process transaction
@@ -221,7 +251,7 @@ def is_in_stock(product):
         elif product not in plural_names:
             print(f"Sorry, we don't carry that product. These are the products "
                "we do carry:\n")
-            # Print the electronics we have in stock, the current stock is dynamic
+            # Print the electronics in stock, the current stock is dynamic
             print_electronics()
             # Prompt the user whether they want to purchase something now
             purchase_above_products(product)
