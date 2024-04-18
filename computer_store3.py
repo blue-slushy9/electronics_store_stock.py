@@ -1,5 +1,25 @@
 # NOTES
 
+# 4/17/24
+
+# Got this code from GPT as an example of what can be done to handle invalid
+# user input:
+
+'''
+def get_valid_input():
+    try:
+        user_input = int(input("Enter a positive integer: "))
+        if user_input <= 0:
+            raise ValueError("Input must be a positive integer.")
+        return user_input
+    except ValueError as e:
+        print(f"Error: {e}")
+        return get_valid_input()  # Retry recursively until valid input is provided
+
+valid_input = get_valid_input()
+print(f"You entered: {valid_input}")
+'''
+
 # 4/12/24
 
 # Found a bug that is similar to the one from yesterday. Added some code to
