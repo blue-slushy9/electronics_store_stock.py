@@ -195,14 +195,14 @@ def transaction(product):
     elif prod_quant > 0:
         # Takes user input and casts it as an integer
         user_quant = input(f"We do have {plural}! We currently have "
-                        f"{prod_quant} in stock. How many would you like? ")
+                           f"{prod_quant} in stock. How many would you like? ")
         # Just to make output more legible
         print()
         # Cast user_quant as integer so we can perform calculations with it
         user_quant = int(user_quant)
 
-    # If user entered a number less than 0...
-    if user_quant < 0:
+    # If user entered a number less or equal to 0...
+    if user_quant <= 0:
         # call the function that prompts for valid input
         user_quant = enter_valid_quant()
         print(f'inside if statement: {user_quant}\n')
@@ -214,10 +214,9 @@ def transaction(product):
     if user_quant <= prod_quant:
         total = (user_quant * prod_price)
         print(f"Great! That will be ${total}!\n")
-        update_stock(prod_quant, user_quant, product)
+        prod_quant = update_stock(prod_quant, user_quant, product)
         # DEBUG
-        print(f'Updated {product} stock: '
-              f'{electronics[product]["Quantity"]}\n')
+        print(f'Updated {product} stock: {prod_quant}\n')
         make_another_purchase()
     
     elif user_quant > prod_quant:
@@ -232,7 +231,7 @@ def transaction(product):
             total = (user_quant * prod_price) # Repeat code, look above
             print()
             print(f"Great! That will be ${total}.\n")
-            update_stock(prod_quant, user_quant, product)
+            prod_quant = update_stock(prod_quant, user_quant, product)
             # DEBUG
             print(f'Updated {product} stock: {prod_quant}\n')
             make_another_purchase()
@@ -305,6 +304,8 @@ def update_stock(prod_quant, user_quant, product):
     new_prod_quant = (prod_quant - user_quant)
     # Update dictionary to reflect new quantity in stock
     electronics[product]["Quantity"] = new_prod_quant
+    # Added on 5/5/24 to fix prod_quant not updating after transaction
+    return new_prod_quant
 
 # You can encapsulate your entire program, or portions of it, inside of a
 # function definition in order to restart the program as needed; this is
