@@ -1,5 +1,11 @@
 # NOTES
 
+# 5/4/24
+
+# Figured out how to use the try-except block ChatGPT gave me, now I can
+# integrate it into this program. Might try to create some classes here just
+# for practice too.
+
 # 4/17/24
 
 # Got this code from GPT as an example of what can be done to handle invalid
@@ -139,6 +145,22 @@ def make_another_purchase():
         print("OK, no problem! Thank you for shopping here.\n")
         exit()
 
+# Try-except block for capturing quantity of product user wants to purchase
+def enter_valid_quant():
+    try:
+        user_quant = int(input("Enter a positive integer: "))
+        if user_quant <= 0:
+            raise ValueError("Input must be a positive integer.")
+        return user_quant
+    except ValueError as e:
+        print(f"Error: {e}")
+        return enter_valid_quant()  # Retry recursively until valid input is provided
+
+#user_quant = enter_valid_quant()
+#print(f"You entered: {user_quant}")
+
+# Going to replace this with a try-except block
+'''        
 # Prompt user for valid quantity
 def enter_valid_quant():
     # Update user_quant to an accepted value
@@ -153,7 +175,8 @@ def enter_valid_quant():
     elif user_quant <= 0:
         # Call function recursively if user enters invalid number again
         enter_valid_quant()
-
+'''
+        
 # This function handles the mechanics of the actual transaction process
 def transaction(product):
     # Define variable that will store current quantity of the product
